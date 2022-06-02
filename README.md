@@ -68,13 +68,15 @@ make
 # результат сохранился, выходим из контейнера
 CTRL+D
 
-# выгружаем контейнер
+# выгружаем контейнер на локальный компьютер
 docker export projector_container > projector_container.tar
 mkdir projector_container && tar -xf projector_container.tar -C projector_container
 
 # переходим в папку и смотрим результат в любом просмотрщике изображений
 cd projector_container/app/data/
 ```
+
+Работоспособность проверялась на Ubuntu 20.04, Docker 20.10.8
 
 **Результат работы:**
 ```
