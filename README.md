@@ -45,9 +45,18 @@
 ```
 git clone https://github.com/denred0/reprojector.git
 cd reprojector
+
+# скачиваем основной образ
 docker pull ubuntu:20.04
+
+# cсоздаем свой образ на основе Dockerfile
 docker build -t projector .
+
+#запускаем контейнер
 docker run --name projector_container -it --entrypoint bash projector
+
+# эти команды выполняются внутри терминала контейнера
+# создаем папку build и собираем проект
 cd src
 mkdir build && cd build
 cmake ..
