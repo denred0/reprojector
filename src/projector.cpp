@@ -49,12 +49,14 @@ std::tuple<Eigen::ArrayXXf, Eigen::ArrayXXf, Eigen::ArrayXXf> Projector::get3DCo
     Eigen::ArrayXXf Z(width, height);
 
     for (int i = 0; i < width; i++) {
+        // #pragma simd
 	    for (int j = 0; j < height; j++) {
             X(i, j) = i;
         }
     }
 
     for (int i = 0; i < width; i++) {
+        //  #pragma simd
 	    for (int j = 0; j < height; j++) {
             Y(i, j) = j;
         }
@@ -181,6 +183,9 @@ int main(int argc, char **argv) {
         }
     }
 
+    float duration_time = 0;
+    auto t_start = std::chrono::high_resolution_clock::now();
+
     Projector projector;
     projector.set_parameters (width, height, fx1, fy1, cx1, cy1, lambda1, fx2, fy2, cx2, cy2, lambda2);
 
@@ -196,10 +201,16 @@ int main(int argc, char **argv) {
     cv::Mat img_convert = cv::Mat::zeros(cv::Size(width, height), CV_8UC1);
 
     for (int i = 0; i < width; i++) {
+        //  #pragma simd
 	    for (int j = 0; j < height; j++) {
-            img_convert.at<uchar>((int)v(i, j), (int)u(i, j)) = img.at<uchar>(j, i);
+            if ((int)v(i, j) >=0 and (int)v(i, j) < height and (int)u(i, j) >= 0 and (int)u(i, j) < width)
+                img_convert.at<uchar>((int)v(i, j), (int)u(i, j)) = img.at<uchar>(j, i);
         }
     }
+
+    auto t_end = std::chrono::high_resolution_clock::now();
+    duration_time = std::chrono::duration<float, std::milli>(t_end - t_start).count();
+
 
     std::string::size_type const p0(image_path.find_last_of('.'));
     std::string ext = image_path.substr(p0 + 1, image_path.length());
@@ -218,6 +229,10 @@ int main(int argc, char **argv) {
     printf("\nTarget optical center X: %.1f", cx2);
     printf("\nTarget optical center Y: %.1f", cy2);
     printf("\nTarget lambda: %.1f\n", lambda2);
+
+    printf("\nReprojection time: %.1f ms\n", duration_time);
+
+
 
     // cv::imshow("Result", img_convert);
     // int kk = cv::waitKey(0);
