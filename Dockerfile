@@ -6,8 +6,8 @@ ENV TZ=Europe/Moscow
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # eigen and opencv
-RUN apt update 
-RUN apt install -y build-essential libopencv-dev libeigen3-dev cmake \
+RUN apt-get update 
+RUN apt-get install -y build-essential libopencv-dev libeigen3-dev cmake \
         && rm -rf /var/lib/apt/lists/*
 
 # cmake
