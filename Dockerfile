@@ -7,10 +7,11 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # eigen and opencv
 RUN apt update 
-RUN apt install -y build-essential libopencv-dev libeigen3-dev
+RUN apt install -y build-essential libopencv-dev libeigen3-dev cmake \
+        && rm -rf /var/lib/apt/lists/*
 
 # cmake
-RUN apt-get install -y cmake
+# RUN apt-get install -y cmake
 
 # build workdir
 WORKDIR /app
